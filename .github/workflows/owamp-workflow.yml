@@ -74,7 +74,7 @@ jobs:
               await github.rest.actions.createWorkflowDispatch({
               owner: 'cs1867',
               repo: 'pscheduler',
-              workflow_id: 'pscheduler-docker.yml',
+              workflow_id: 'pscheduler-workflow.yml',
               ref: 'github-workflow',
                inputs: {
                 OS: '${{ github.event.inputs.OS }}',

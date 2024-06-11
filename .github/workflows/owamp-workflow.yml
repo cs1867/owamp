@@ -46,7 +46,7 @@ jobs:
         # github-actions-workflow.sh
         - name: run docker oneshot builder and github-actions-workflow.sh
           run: |
-           curl -s https://raw.githubusercontent.com/perfsonar/docker-oneshot-builder/main/build | sh -s - --run github-actions-workflow.sh . '${{ github.event.inputs.OS }}'  
+           curl -s https://raw.githubusercontent.com/perfsonar/docker-oneshot-builder/main/build | sh -s - --run github-workflow.sh . '${{ github.event.inputs.OS }}'  
            
         - uses: actions/upload-artifact@v3
           with:

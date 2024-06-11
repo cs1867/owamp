@@ -2,7 +2,7 @@
 
 name: owamp-workflow
  
-on:
+on: 
   workflow_dispatch:
     inputs: 
       OS:

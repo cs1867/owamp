@@ -33,6 +33,29 @@ jobs:
         - name: Pretty-print BUILD_VARS_JSON
           run: |
             echo '${{ github.event.inputs.BUILD_VARS_JSON }}'
+            
+        - name: Extract dependencies of pscheduler
+          id: extract_deps
+          run: |
+            echo '${{ github.event.inputs.BUILD_VARS_JSON }}' | jq -r '.repos[] | select(.name == "owamp") | .deps[]' > deps.txt
+            echo "Dependencies:"
+            cat deps.txt
+
+        - name: Set dependencies as outputs
+          id: set_deps
+          run: |
+            DEPS=$(cat deps.txt)
+            echo "DEPS=$DEPS" >> $GITHUB_ENV
+
+        - name: Download artifacts
+          run: |
+            while IFS= read -r repo; do
+              echo "Downloading artifact for $repo"
+              mkdir -p artifacts/$repo
+              gh run download ${{ github.event.inputs.RUNID }} --repo cs1867/$repo -D artifacts/$repo --name "$repo-${{ github.event.inputs.OS }}"
+              done < deps.txt
+          env:
+            GITHUB_TOKEN: ${{ secrets.GIT_ACTIONS }}
           
     #    - name: Download i2util artifacts 
     #      uses: actions/download-artifact@v4

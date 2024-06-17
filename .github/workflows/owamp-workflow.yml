@@ -53,44 +53,23 @@ jobs:
               echo "Downloading artifact for $repo"
               run_id=$(echo '${{ github.event.inputs.BUILD_VARS_JSON }}' | jq -r ".buildids | .[\"$repo\"]")
               echo "rund id $run_id"
-              mkdir -p artifacts/$repo
+              mkdir -p artifacts
               gh run download $run_id --repo cs1867/$repo -D artifacts/$repo --name "$repo-${{ github.event.inputs.OS }}"
             done < deps.txt
           env:
             GITHUB_TOKEN: ${{ secrets.GIT_ACTIONS }}
-          
-    #    - name: Download i2util artifacts 
-    #      uses: actions/download-artifact@v4
-    #      with:
-    #         name: i2util-${{ github.event.inputs.OS }}
-    #         repository: cs1867/i2util
-    #         path: artifacts
-    #         github-token: ${{ secrets.GIT_ACTIONS }}
-    #         run-id: ${{ github.event.inputs.I2UTILID }}
-      
-          
-    #    # github-actions-workflow.sh
-    #    - name: run docker oneshot builder and github-actions-workflow.sh
-    #      run: |
-    #       curl -s https://raw.githubusercontent.com/perfsonar/docker-oneshot-builder/main/build | sh -s - --run github-workflow.sh . '${{ github.event.inputs.OS }}'  
+                
+        # github-actions-workflow.sh
+        - name: run docker oneshot builder and github-actions-workflow.sh
+          run: |
+           curl -s https://raw.githubusercontent.com/perfsonar/docker-oneshot-builder/main/build | sh -s - --run github-workflow.sh . '${{ github.event.inputs.OS }}'  
            
-    #    - uses: actions/upload-artifact@v3
-    #      with:
-    #      #Name the artifact uniquely
-    #        name: ${{ github.event.repository.name }}-${{ github.event.inputs.OS }}
-    #        #Where the finished product lives after the build
-    #        path: unibuild-repo
-    #        #Don't keep these for long.  This is just a test.
-    #        retention-days: 5
-
-    #    - uses: actions/upload-artifact@v3
-    #      with:
-    #        #Name the artifact uniquely
-    #        name: ${{ github.event.repository.name }}-${{ github.event.inputs.OS }}
-    #        #Where the finished product lives after the build
-    #        path: unibuild-repo
-    #        #Don't keep these for long.  This is just a test.
-    #        retention-days: 5
+        - uses: actions/upload-artifact@v3
+          with:
+            name: ${{ github.event.repository.name }}-${{ github.event.inputs.OS }}
+            path: unibuild-repo
+            #Don't keep these for long.  This is just a test.
+            retention-days: 5
          
     #    - name: Pass workflow to pscheduler repo
     #      uses: actions/github-script@v6

@@ -32,7 +32,7 @@ jobs:
         
         - name: Pretty-print BUILD_VARS_JSON
           run: |
-            echo '${{ github.event.inputs.BUILD_VARS_JSON }}' | jq .
+            echo "$BUILD_VARS_JSON"
           
     #    - name: Download i2util artifacts 
     #      uses: actions/download-artifact@v4

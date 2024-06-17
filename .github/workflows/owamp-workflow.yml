@@ -54,11 +54,14 @@ jobs:
               run_id=$(echo '${{ github.event.inputs.BUILD_VARS_JSON }}' | jq -r ".buildids | .[\"$repo\"]")
               echo "rund id $run_id"
               mkdir -p artifacts
-              gh run download $run_id --repo cs1867/$repo -D artifacts/$repo --name "$repo-${{ github.event.inputs.OS }}"
+              gh run download $run_id --repo cs1867/$repo -D artifacts --name "$repo-${{ github.event.inputs.OS }}"
             done < deps.txt
           env:
             GITHUB_TOKEN: ${{ secrets.GIT_ACTIONS }}
-                
+
+        - name: Download artifacts
+          run: |     
+            ls artifacts
         # github-actions-workflow.sh
         - name: run docker oneshot builder and github-actions-workflow.sh
           run: |

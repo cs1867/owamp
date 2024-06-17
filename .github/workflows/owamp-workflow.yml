@@ -69,7 +69,13 @@ jobs:
             path: unibuild-repo
             #Don't keep these for long.  This is just a test.
             retention-days: 5
+            
+        - name: Use modified BUILD_VARS_JSON
+          run: |
+            echo "Using the modified BUILD_VARS_JSON environment variable:"
+            echo '${{ github.event.inputs.BUILD_VARS_JSON }}' | jq .
 
+            
         - name: Look up the next repo name to build
           id: extract_repo_name
           run: |

@@ -34,10 +34,10 @@ jobs:
           run: |
             echo '${{ github.event.inputs.BUILD_VARS_JSON }}'
             
-        - name: Extract dependencies of pscheduler
+        - name: Extract dependencies
           id: extract_deps
           run: |
-            echo '${{ github.event.inputs.BUILD_VARS_JSON }}' | jq -r '.repos[] | select(.name == "owamp") | .deps[]' > deps.txt
+            echo '${{ github.event.inputs.BUILD_VARS_JSON }}' | jq -r '.repos[] | select(.name == "${{ github.event.repository.name }}") | .deps[]' > deps.txt
             echo "Dependencies:"
             cat deps.txt
 
@@ -59,10 +59,6 @@ jobs:
           env:
             GITHUB_TOKEN: ${{ secrets.GIT_ACTIONS }}
 
-        - name: Download artifacts
-          run: |     
-            ls artifacts
-        # github-actions-workflow.sh
         - name: run docker oneshot builder and github-actions-workflow.sh
           run: |
            curl -s https://raw.githubusercontent.com/perfsonar/docker-oneshot-builder/main/build | sh -s - --run github-workflow.sh . '${{ github.event.inputs.OS }}'  
@@ -73,21 +69,40 @@ jobs:
             path: unibuild-repo
             #Don't keep these for long.  This is just a test.
             retention-days: 5
+
+        - name: Look up the next repo name to build
+          id: extract_repo_name
+          run: |
+            echo "BUILD_VARS_JSON value is: $BUILD_VARS_JSON"
+            NEXTREPO=$(echo  "$BUILD_VARS_JSON" | jq -r '.repos[0].name' )
+            echo "NEXTREPO=$NEXTREPO" >> $GITHUB_ENV  
+            
+        - name: Display NEXTREPO value
+          run: echo "The value of NEXTREPO is $NEXTREPO"  
+
+        - name: Add GitHub run ID to buildids
+          id: add_run_id
+          run: |
+            GITHUB_RUN_ID=${{ github.run_id }}
+            modified_json=$(echo "$BUILD_VARS_JSON" | jq --arg run_id "$GITHUB_RUN_ID" '.buildids.${{ github.event.repository.name }} = $run_id')
+            echo "Modified JSON with GitHub run ID:"
+            echo "$modified_json" | jq .
+            BUILD_VARS_JSON=$(echo "$modified_json" | jq -c '.')
+            echo "BUILD_VARS_JSON=$BUILD_VARS_JSON" >> $GITHUB_ENV
+            echo "BUILD_VARS_JSON=$BUILD_VARS_JSON"    
          
-    #    - name: Pass workflow to pscheduler repo
-    #      uses: actions/github-script@v6
-    #      with:
-    #        github-token: ${{ secrets.GIT_ACTIONS }}
-    #        script: |
-    #          await github.rest.actions.createWorkflowDispatch({
-    #          owner: 'cs1867',
-     #         repo: 'pscheduler',
-     #         workflow_id: 'pscheduler-workflow.yml',
-     #         ref: 'github-workflow',
-     #          inputs: {
-     #           OS: '${{ github.event.inputs.OS }}',
-     #           MINORPACKAGEID: '${{ github.event.inputs.MINORPACKAGEID }}',
-     #           I2UTILID: '${{ github.event.inputs.I2UTILID }}',
-     #           OWAMPID: '${{ github.run_id }}'
-     #         }
-     #         })
+        - name: Pass workflow  
+          uses: actions/github-script@v6
+          with:
+            github-token: ${{ secrets.GIT_ACTIONS }}
+            script: |
+              await github.rest.actions.createWorkflowDispatch({
+              owner: 'cs1867',
+              repo: '${{ env.NEXTREPO}}',
+              workflow_id: '${{ env.NEXTREPO}}-workflow.yml',
+              ref: 'github-workflow',
+               inputs: {
+              OS:  '${{ github.event.inputs.OS }}',
+              BUILD_VARS_JSON: '${{ env.BUILD_VARS_JSON}}'
+              }
+              })

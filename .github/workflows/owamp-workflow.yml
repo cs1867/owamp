@@ -54,7 +54,7 @@ jobs:
               elif [ "${{ github.event.inputs.OS }}" == 'd11' ] || [ "${{ github.event.inputs.OS }}" == 'd12' ]; then
               cp project/toolbox/workflows/github-db-workflow.sh . 
               elif [ "${{ github.event.inputs.OS }}" == 'u20' ] || [ "${{ github.event.inputs.OS }}" == 'u24' ]; then
-              cp project/toolbox/workflows/github-ub-workflow.sh . 
+              cp project/toolbox/workflows/github-db-workflow.sh . 
             fi
         
         - name: Pretty-print BUILD_VARS_JSON
@@ -92,11 +92,11 @@ jobs:
                 ls -al artifacts/DEBS/*
               elif [ "${{ github.event.inputs.OS }}" == 'u20' ] || [ "${{ github.event.inputs.OS }}" == 'u24' ]; then
                 echo " ubuntu artifacts " 
-                mkdir -p artifacts/ubuntu
-                echo "copy to the artifacts ubuntu dir"
-                cp -r "$artifact_path"/* artifacts/ubuntu
-                echo "list artifacts ubuntu dir"
-                ls -al artifacts/ubuntu/*
+                mkdir -p artifacts/DEBS
+                echo "copy to the artifacts DEBS dir"
+                cp -r "$artifact_path"/* artifacts/DEBS
+                echo "list artifacts DEBS dir"
+                ls -al artifacts/DEBS/*
               fi
             done < deps.txt
           env:

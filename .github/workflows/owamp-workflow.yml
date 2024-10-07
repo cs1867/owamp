@@ -76,7 +76,7 @@ jobs:
               echo "Downloading artifact for $repo"
               run_id=$(echo "$BUILD_VARS_JSON" | jq -r ".buildids | .[\"$repo\"]")
               echo "rund id $run_id"
-              gh run download $run_id --repo cs1867/$repo -D artifacts/$repo --name "$repo-${{ github.event.inputs.OS }}"  
+              gh run download $run_id --repo cs1867/$repo -D artifacts/$repo --name "$repo-${{ env.BUILD_OS }}"  
               artifact_path="artifacts/$repo"
               echo "list artifact path"
               ls -al "$artifact_path"
@@ -102,10 +102,10 @@ jobs:
           run: |
               case "${{ env.BUILD_OS }}" in
                 'ol8'|'el9')              
-                   curl -s https://raw.githubusercontent.com/perfsonar/docker-oneshot-builder/main/build | sh -s - --run github-el-workflow.sh . '${{ github.event.inputs.OS }}'  
+                   curl -s https://raw.githubusercontent.com/perfsonar/docker-oneshot-builder/main/build | sh -s - --run github-el-workflow.sh . '${{ env.BUILD_OS }}'  
                 ;;
                 'd11'|'d12'|'u20'|'u24')                
-                  curl -s https://raw.githubusercontent.com/perfsonar/docker-oneshot-builder/main/build | sh -s - --run github-db-workflow.sh . '${{ github.event.inputs.OS }}'
+                  curl -s https://raw.githubusercontent.com/perfsonar/docker-oneshot-builder/main/build | sh -s - --run github-db-workflow.sh . '${{ env.BUILD_OS }}'
                 ;;
               esac
               

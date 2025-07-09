@@ -28,6 +28,15 @@ jobs:
          echo "Build TYPE : ${{ needs.call-reusable.outputs.BUILD_TYPE }}"
          echo "Build BRANCH : ${{ needs.call-reusable.outputs.BUILD_BRANCH }}"
 
+  oneshot-build:
+    needs: call-reusable
+    uses: cs1867/project/.github/workflows/oneshot-script-build.yml@master
+    with:
+      BUILD_OS: ${{ needs.call-reusable.outputs.BUILD_OS }}
+      BUILD_TYPE: ${{ needs.call-reusable.outputs.BUILD_TYPE }}
+      BUILD_BRANCH: ${{ needs.call-reusable.outputs.BUILD_BRANCH }}
+      BUILD_VARS_JSON: ${{ needs.call-reusable.outputs.BUILD_VARS_JSON }}
+
 
  
           

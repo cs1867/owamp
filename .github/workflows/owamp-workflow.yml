@@ -5,12 +5,7 @@ on:
     inputs: 
       BUILD_VARS_JSON:
         description: 'Build var json file'
-        required: true
-  workflow_run:
-    workflows: "Build owamp artifacts and pass runid"
-    branches: 'github-workflow'
-    types:
-      - completed      
+        required: true   
  
 jobs:
   
@@ -19,9 +14,9 @@ jobs:
     with:
       BUILD_VARS_JSON: ${{ inputs.BUILD_VARS_JSON }}
 
-  oneshot-build:
+  oneshot-scripted-build:
     needs: prepare-build
-    uses: cs1867/project/.github/workflows/oneshot-script-build.yml@master
+    uses: cs1867/project/.github/workflows/oneshot-scripted-build.yml@master
     secrets:
       GIT_ACTIONS: ${{ secrets.GIT_ACTIONS }}
     with:
@@ -33,7 +28,7 @@ jobs:
   post-build:
     needs: 
       - prepare-build
-      - oneshot-build
+      - oneshot-scripted-build
     uses: cs1867/project/.github/workflows/post-build.yml@master
     secrets:
       GIT_ACTIONS: ${{ secrets.GIT_ACTIONS }}

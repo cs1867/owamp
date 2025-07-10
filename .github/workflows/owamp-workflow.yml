@@ -51,55 +51,6 @@ jobs:
       BUILD_VARS_JSON: ${{ needs.call-reusable.outputs.BUILD_VARS_JSON }}
  
           
-  
- 
- 
-    #    
-    #    - name: Delete current repo from build
-    #      id: modify_json
-    #      run: |
-    #        modified_json=$(echo "$BUILD_VARS_JSON" | jq 'del(.repos[0])')
-    #        echo "Modified JSON:"
-    #        echo "$modified_json" | jq .
-    #        BUILD_VARS_JSON=$(echo "$modified_json" | jq -c '.')
-    #        echo "BUILD_VARS_JSON=$BUILD_VARS_JSON" >> $GITHUB_ENV
-    #        
-    #    - name: Look up the next repo name to build
-    #      id: extract_repo_name
-    #      run: |
-    #        echo "BUILD_VARS_JSON value is: $BUILD_VARS_JSON"
-    #        NEXTREPO=$(echo  "$BUILD_VARS_JSON"  | jq -r '.repos[0].name' )
-    #        echo "NEXTREPO=$NEXTREPO" >> $GITHUB_ENV  
-    #        
-    #    - name: Display NEXTREPO value
-    #      run: echo "The value of NEXTREPO is $NEXTREPO"  
-
-    #    - name: Add GitHub run ID to buildids
-    #      id: add_run_id
-    #      run: |
-    #        GITHUB_RUN_ID=${{ github.run_id }}
-    #        modified_json=$(echo "$BUILD_VARS_JSON"  | jq --arg run_id "$GITHUB_RUN_ID" '.buildids.${{ github.event.repository.name }} = $run_id')
-    #        echo "Modified JSON with GitHub run ID:"
-    #        echo "$modified_json" | jq .
-    #        BUILD_VARS_JSON=$(echo "$modified_json" | jq -c '.')
-    #        echo "BUILD_VARS_JSON=$BUILD_VARS_JSON" >> $GITHUB_ENV
-    #        echo "BUILD_VARS_JSON=$BUILD_VARS_JSON" 
-    #        
-    #    - name: Capture end date and time
-    #      id: end_time
-    #      run: echo "end_time=$(date -u)" >> $GITHUB_ENV
-
-    #    - name: Add end time to build_vars.json
-    #      run: |
-    #        modified_json=$(echo "$BUILD_VARS_JSON" | jq '.buildstats += { "${{ github.event.repository.name }}-end": "${{ env.end_time }}" }' )
-    #        BUILD_VARS_JSON=$(echo "$modified_json" | jq -c '.')
-    #        echo "BUILD_VARS_JSON=$BUILD_VARS_JSON" >> $GITHUB_ENV
-    #        echo "BUILD_VARS_JSON=$BUILD_VARS_JSON"
-            
-    #    - name: Use modified BUILD_VARS_JSON with run id
-    #      run: |
-    #        echo "Using the modified BUILD_VARS_JSON environment variable:"
-    #        echo "$BUILD_VARS_JSON" | jq .
          
      #   - name: Pass workflow  
      #     if: env.BUILD_TYPE == 'FULL'

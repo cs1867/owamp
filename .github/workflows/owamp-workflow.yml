@@ -14,58 +14,44 @@ on:
  
 jobs:
   
-  call-reusable:
+  prepare-build:
     uses: cs1867/project/.github/workflows/prepare-build.yml@master
     with:
       BUILD_VARS_JSON: ${{ inputs.BUILD_VARS_JSON }}
 
   show-result:
     runs-on: ubuntu-latest
-    needs: call-reusable
+    needs: prepare-build
     steps:
       - run: |
-         echo "Build OS : ${{ needs.call-reusable.outputs.BUILD_OS }}"
-         echo "Build TYPE : ${{ needs.call-reusable.outputs.BUILD_TYPE }}"
-         echo "Build BRANCH : ${{ needs.call-reusable.outputs.BUILD_BRANCH }}"
+         echo "Build OS : ${{ needs.prepare-build.outputs.BUILD_OS }}"
+         echo "Build TYPE : ${{ needs.prepare-build.outputs.BUILD_TYPE }}"
+         echo "Build BRANCH : ${{ needs.prepare-build.outputs.BUILD_BRANCH }}"
 
   oneshot-build:
-    needs: call-reusable
+    needs: prepare-build
     uses: cs1867/project/.github/workflows/oneshot-script-build.yml@master
     secrets:
       GIT_ACTIONS: ${{ secrets.GIT_ACTIONS }}
     with:
-      BUILD_OS: ${{ needs.call-reusable.outputs.BUILD_OS }}
-      BUILD_TYPE: ${{ needs.call-reusable.outputs.BUILD_TYPE }}
-      BUILD_BRANCH: ${{ needs.call-reusable.outputs.BUILD_BRANCH }}
-      BUILD_VARS_JSON: ${{ needs.call-reusable.outputs.BUILD_VARS_JSON }}
+      BUILD_OS: ${{ needs.prepare-build.outputs.BUILD_OS }}
+      BUILD_TYPE: ${{ needs.prepare-build.outputs.BUILD_TYPE }}
+      BUILD_BRANCH: ${{ needs.prepare-build.outputs.BUILD_BRANCH }}
+      BUILD_VARS_JSON: ${{ needs.prepare-build.outputs.BUILD_VARS_JSON }}
 
   post-build:
     needs: 
-      - call-reusable
+      - prepare-build
       - oneshot-build
     uses: cs1867/project/.github/workflows/post-build.yml@master
     secrets:
       GIT_ACTIONS: ${{ secrets.GIT_ACTIONS }}
     with:
-      BUILD_OS: ${{ needs.call-reusable.outputs.BUILD_OS }}
-      BUILD_TYPE: ${{ needs.call-reusable.outputs.BUILD_TYPE }}
-      BUILD_BRANCH: ${{ needs.call-reusable.outputs.BUILD_BRANCH }}
-      BUILD_VARS_JSON: ${{ needs.call-reusable.outputs.BUILD_VARS_JSON }}
+      BUILD_OS: ${{ needs.prepare-build.outputs.BUILD_OS }}
+      BUILD_TYPE: ${{ needs.prepare-build.outputs.BUILD_TYPE }}
+      BUILD_BRANCH: ${{ needs.prepare-build.outputs.BUILD_BRANCH }}
+      BUILD_VARS_JSON: ${{ needs.prepare-build.outputs.BUILD_VARS_JSON }}
  
           
          
-     #   - name: Pass workflow  
-     #     if: env.BUILD_TYPE == 'FULL'
-     #     uses: actions/github-script@v6
-     #     with:
-     #       github-token: ${{ secrets.GIT_ACTIONS }}
-     #       script: |
-     #         await github.rest.actions.createWorkflowDispatch({
-     #         owner: 'cs1867',
-     #         repo: '${{ env.NEXTREPO}}',
-     #         workflow_id: '${{ env.NEXTREPO}}-workflow.yml',
-    #          ref: 'github-workflow',
-    #           inputs: {
-     #         BUILD_VARS_JSON: '${{ env.BUILD_VARS_JSON}}'
-     #         }
-     #         })
+ 

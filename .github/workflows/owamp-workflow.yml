@@ -44,6 +44,8 @@ jobs:
       - call-reusable
       - oneshot-build
     uses: cs1867/project/.github/workflows/post-build.yml@master
+    secrets:
+      GIT_ACTIONS: ${{ secrets.GIT_ACTIONS }}
     with:
       BUILD_OS: ${{ needs.call-reusable.outputs.BUILD_OS }}
       BUILD_TYPE: ${{ needs.call-reusable.outputs.BUILD_TYPE }}

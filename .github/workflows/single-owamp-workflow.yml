@@ -8,7 +8,7 @@ env:
   BUILD_OS: d12 
 
 jobs:
-  pscheduler-daemon:
+  owamp-daemon:
     runs-on: ubuntu-latest
 
     steps:

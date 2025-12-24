@@ -43,6 +43,8 @@ jobs:
           gh run download 20488411053 --repo cs1867/i2util -D artifacts/i2util --name "i2util-${{ env.BUILD_OS }}"  
           artifact_path="artifacts/i2util"
           echo "copy to the artifacts RPM dir"
+          ls -al artifacts
+          ls -al artifacts/i2util
           cp "$artifact_path"/RPMS/*.rpm artifacts/RPMS
           ls -al "$artifact_path"
         env:

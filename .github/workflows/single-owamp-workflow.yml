@@ -38,8 +38,8 @@ jobs:
           mkdir -p artifacts
           mkdir -p artifacts/RPMS
           echo "Downloading artifact for i2util"
-          echo "Run ID: 4962012254"
-          gh run download 4962012254 --repo cs1867/i2util -D artifacts/i2util --name "i2util-${{ env.BUILD_OS }}"  
+          echo "Run ID: 20488411053"
+          gh run download 20488411053 --repo cs1867/i2util -D artifacts/i2util --name "i2util-${{ env.BUILD_OS }}"  
           artifact_path="artifacts/i2util"
           echo "copy to the artifacts RPM dir"
           cp "$artifact_path"/RPMS/*.rpm artifacts/RPMS

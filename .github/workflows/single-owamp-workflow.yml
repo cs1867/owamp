@@ -5,7 +5,7 @@ on:
     branches: 
       - github-workflow
 env:  
-  BUILD_OS: d11
+  BUILD_OS: u24
 
 jobs:
   owamp-daemon:
@@ -39,8 +39,8 @@ jobs:
           mkdir -p artifacts/deb
           ls -al artifacts
           echo "Downloading artifact for i2util"
-          echo "Run ID: 20491377724"
-          gh run download 20491377724 --repo cs1867/i2util -D artifacts/i2util --name "i2util-${{ env.BUILD_OS }}"  
+          echo "Run ID: 20491845247"
+          gh run download 20491845247 --repo cs1867/i2util -D artifacts/i2util --name "i2util-${{ env.BUILD_OS }}"  
           artifact_path="artifacts/i2util"
           echo "copy to the artifacts deb dir"
           ls -al artifacts
